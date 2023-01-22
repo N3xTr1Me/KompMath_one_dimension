@@ -16,11 +16,11 @@ class EulerMethod(ISolver):
 
         return np.linalg.inv(B) @ ((A - B) @ current_step + self._domain.get_load(t=t)) / self._domain.dt()
 
-    def _forward(self, current_step: np.ndarray, t: int, dt: float) -> np.ndarray:
-        return current_step + dt * self._derivative(current_step, self._domain.time(t))
+    def _forward(self, current_step: np.ndarray, t: float, dt: float) -> np.ndarray:
+        return current_step + dt * self._derivative(current_step, t)
 
-    def _backward(self, current_step: np.ndarray, t: int, dt: float) -> np.ndarray:
-        return current_step + dt * self._derivative(current_step, self._domain.time(t + 1))
+    def _backward(self, current_step: np.ndarray, t: float, dt: float) -> np.ndarray:
+        return current_step + dt * self._derivative(current_step, t)
 
     def solve(self, domain: Domain) -> np.ndarray:
         self._domain = domain
@@ -29,11 +29,22 @@ class EulerMethod(ISolver):
         C = np.zeros((self._domain.space_steps() - 2, self._domain.time_steps()))
         result = np.zeros((domain.space_steps(), domain.time_steps()))  # final resulting matrix
 
-        for t in range(self._domain.time_steps() - 1):
+        step = 0
+
+        time = self._domain.get_time()
+
+        for t in time[:-1]:
             if self.__mode:
-                C[:, t + 1] = self._forward(current_step=C[:, t], t=t, dt=domain.dt())
+                C[:, step + 1] = self._forward(current_step=C[:, step], t=t, dt=domain.dt())
             else:
-                C[:, t + 1] = self._backward(current_step=C[:, t], t=t, dt=domain.dt())
+                C[:, step + 1] = self._backward(current_step=C[:, step],
+                                                t=self._domain.time(time.index(t) + 1), dt=domain.dt())
+
+        # for t in range(self._domain.time_steps() - 1):
+        #     if self.__mode:
+        #         C[:, t + 1] = self._forward(current_step=C[:, t], t=t, dt=domain.dt())
+        #     else:
+        #         C[:, t + 1] = self._backward(current_step=C[:, t], t=t, dt=domain.dt())
 
         result[1:-1] = C
 

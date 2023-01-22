@@ -37,6 +37,9 @@ class Domain:
     def time(self, index: int) -> float:
         return self.__time[index]
 
+    def get_time(self) -> list:
+        return self.__time.partition.tolist()
+
     def space(self, index: int) -> float:
         return self.__space[index]
 
