@@ -8,5 +8,5 @@ class Mesh:
 
         self.partition = np.linspace(start=start, stop=end, num=steps)
 
-    def __getitem__(self, item: float) -> float:
+    def __getitem__(self, item: int) -> float:
         return self.partition[item]

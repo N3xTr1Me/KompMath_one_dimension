@@ -39,5 +39,4 @@ class EulerMethod(ISolver):
 
         self._domain = None
 
-        # TODO ОТКУДА КОНСТАНТА??!
-        return result / domain.time_steps()
+        return result * domain.dt()

@@ -42,7 +42,7 @@ def main():
 
     # Plot of numerical and exact solutions at t=1
     fig, ax = plt.subplots()
-    ax.plot(space.partition, U[:, -1], label='Numerical Solution')
+    ax.plot(space.partition, U[:, -1], label='Numerical Solution', linewidth=3)
     ax.plot(space.partition, E[:, -1], label='Analytical Solution')
     ax.set(xlabel='x', ylabel='Heat', title='Solution at t=1. dt=1/{}, dx=1/{}'.format(h - 1, n - 1))
     ax.legend()

@@ -1,9 +1,10 @@
 from grid.mesh.mesh import Mesh
 from solvers.approximation.gauss import GaussQuadrature
 
-from configuration.config import n, h
+from configuration.config import f
 
 import numpy as np
+from scipy.integrate import quad
 
 
 class Domain:
@@ -12,7 +13,7 @@ class Domain:
         self.__space = space
         self.__time = time
 
-        self.__approximation = GaussQuadrature()
+        self.__approximation = quad
 
         self.M = self._build_mass()
         self.S = self._build_stiffness()
@@ -74,6 +75,8 @@ class Domain:
         result = np.zeros(space_size)
 
         for i in range(1, space_size):
-            result[i] = self.__approximation(x=self.__space[i], t=t, h=self.ds())
+            # result[i] = self.__approximation(x=self.__space[i], t=t, h=self.ds())
+            result[i] = self.__approximation(lambda x: f(x, t), a=self.__space[i] - self.ds() / 2,
+                                             b=self.__space[i] + self.ds() / 2)[0]
 
         return result[1:]
