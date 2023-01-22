@@ -1,0 +1,1 @@
+# KompMath_one_dimension
